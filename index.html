@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>僑光國小 115學年度 一年級英語學習護照</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;
+  min-height:100vh;
+  min-height:100dvh;
+  background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Microsoft JhengHei",sans-serif;
+  color:#1e293b;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:12px;
+  overflow:hidden;
+}
+#confetti-canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+  z-index:9999;
+}
+.app-viewport{
+  width:100%;
+  max-width:440px;
+  min-height:92vh;
+  min-height:92dvh;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:0 25px 50px -12px rgba(0,0,0,.5);
+  position:relative;
+  z-index:1;
+}
+.app-header{
+  background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);
+  color:white;
+  padding:18px 14px;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(79,70,229,.3);
+}
+.app-title{
+  margin:0 0 12px 0;
+  font-size:1.2rem;
+  font-weight:900;
+  letter-spacing:0.5px;
+}
+.select-label{
+  display:block;
+  color:#e0e7ff;
+  font-size:.8rem;
+  font-weight:800;
+  margin:0 0 5px 2px;
+  text-align:left;
+}
+.select-input{
+  width:100%;
+  padding:10px 14px;
+  font-size:.95rem;
+  border-radius:12px;
+  border:none;
+  background-color:rgba(255,255,255,.22);
+  color:white;
+  font-weight:800;
+  outline:none;
+  cursor:pointer;
+}
+.select-input option{background-color:#1e1b4b;color:white}
+.control-panel{
+  background:#f8fafc;
+  padding:10px 14px;
+  border-bottom:1px solid #e2e8f0;
+}
+.unit-select{
+  width:100%;
+  padding:10px 14px;
+  font-size:.92rem;
+  border-radius:12px;
+  border:1px solid #cbd5e1;
+  background:white;
+  color:#334155;
+  font-weight:800;
+  outline:none;
+}
+.content-area{
+  flex:1;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+}
+.mode-section{display:none;height:100%;flex-direction:column;justify-content:space-between;flex:1;}
+.mode-section.active{display:flex;}
+.card-box{
+  background:white;
+  border-radius:24px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  box-shadow:0 10px 25px -5px rgba(0,0,0,.05);
+  border:2px solid #f1f5f9;
+  flex:1;
+  margin-bottom:14px;
+  position:relative;
+  min-height:220px;
+  transition:transform 0.2s ease;
+}
+.card-box.bounce{
+  animation:popSuccess 0.4s ease;
+}
+@keyframes popSuccess{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.04);}
+  100%{transform:scale(1);}
+}
+.letter-badge{
+  font-size:2.6rem;
+  font-weight:900;
+  color:#4f46e5;
+  background:#eef2ff;
+  width:76px;
+  height:76px;
+  line-height:76px;
+  text-align:center;
+  border-radius:50%;
+  margin-bottom:12px;
+}
+.word-text{
+  font-size:1.85rem;
+  font-weight:900;
+  color:#0f172a;
+  text-align:center;
+  line-height:1.3;
+}
+.meaning-text{
+  font-size:1.2rem;
+  color:#4f46e5;
+  font-weight:800;
+  margin-top:8px;
+  text-align:center;
+}
+.progress-badge{
+  display:inline-block;
+  background:#e0e7ff;
+  color:#4f46e5;
+  padding:5px 14px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:.85rem;
+  margin-bottom:10px;
+}
+.btn{
+  width:100%;
+  padding:13px;
+  font-size:1rem;
+  font-weight:800;
+  border:none;
+  border-radius:16px;
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
+  transition:all 0.15s ease;
+}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:linear-gradient(135deg,#4f46e5 0%,#6366f1 100%);color:white}
+.btn-success{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;margin-top:8px;}
+.btn-outline{background:white;color:#475569;border:1px solid #cbd5e1}
+.nav-row{display:flex;gap:10px;width:100%;margin-top:8px;}
+.feedback-box{
+  margin-top:10px;
+  padding:12px;
+  border-radius:14px;
+  text-align:center;
+  font-weight:800;
+  width:100%;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.92rem;
+  transition:all 0.3s ease;
+}
+.correct{
+  background:#dcfce7;
+  color:#166534;
+  animation:popSuccess 0.3s ease;
+}
+.incorrect{background:#fee2e2;color:#991b1b}
+.option-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  width:100%;
+  margin-top:14px;
+}
+.option-text-btn{
+  border:2px solid #e2e8f0;
+  background:white;
+  border-radius:16px;
+  padding:14px 8px;
+  font-size:1.15rem;
+  font-weight:900;
+  color:#334155;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.option-text-btn:active{background:#f1f5f9;transform:scale(0.96);}
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="app-viewport">
+  <div class="app-header">
+    <h1 class="app-title">僑光國小 英語學習護照</h1>
+    <label class="select-label">學習模式</label>
+    <select id="modeSelect" class="select-input" onchange="switchMode(this.value)">
+      <option value="flashcard">⚡ 字母單字閃示卡</option>
+      <option value="phonicsQuiz">🔤 字母辨音測驗</option>
+      <option value="sentencePractice">📘 生活與課室英語跟讀</option>
+    </select>
+  </div>
+
+  <div class="control-panel">
+    <label class="select-label" style="color:#475569;" for="unitSelect">學習範圍</label>
+    <select id="unitSelect" class="unit-select" onchange="onUnitChange()"></select>
+  </div>
+
+  <div class="content-area">
+    <!-- 1. 閃示卡模式 -->
+    <div id="flashcard-mode" class="mode-section active">
+      <div class="card-box" id="fc-card">
+        <span class="progress-badge" id="fc-progress">1 / 26</span>
+        <div class="letter-badge" id="fc-letter">Aa</div>
+        <div class="word-text" id="fc-word">apple</div>
+        <div class="meaning-text" id="fc-meaning">蘋果</div>
+      </div>
+      <button class="btn btn-primary" onclick="playCurrentWordAudio()">🔊 聆聽發音</button>
+      <div class="nav-row">
+        <button class="btn btn-outline" onclick="prevWord()">⬅️ 上一個</button>
+        <button class="btn btn-outline" onclick="nextWord()">下一個 ➡️</button>
+      </div>
+    </div>
+
+    <!-- 2. 辨音測驗模式 -->
+    <div id="phonicsQuiz-mode" class="mode-section">
+      <div id="phonics-quiz-view">
+        <div class="card-box" id="phonics-card" style="min-height:160px;flex:none;">
+          <span class="progress-badge" id="phonics-progress">題目 1 / 10</span>
+          <button class="btn btn-primary" onclick="playPhonicsQuizAudio()" style="margin-top:6px;">🔊 點擊播放題目發音</button>
+          <p style="font-weight:800;color:#64748b;margin:12px 0 0 0;font-size:0.9rem;">請選出聽到的單字：</p>
+        </div>
+        <div class="option-grid" id="phonics-quiz-options"></div>
+        <div id="phonics-feedback" class="feedback-box"></div>
+      </div>
+      <div id="phonics-result-view" style="display:none;flex-direction:column;flex:1;justify-content:center;"></div>
+    </div>
+
+    <!-- 3. 句子跟讀模式 -->
+    <div id="sentencePractice-mode" class="mode-section">
+      <div class="card-box" id="sentence-card">
+        <span class="progress-badge" id="sentence-progress">句子 1 / 17</span>
+        <div class="word-text" id="sentence-text" style="font-size:1.35rem;margin-top:10px;">Tuck in your shirt.</div>
+        <div class="meaning-text" id="sentence-meaning">將衣服紮進去。</div>
+      </div>
+      <button class="btn btn-primary" onclick="playCurrentSentenceAudio()">🔊 播放示範朗讀</button>
+      <div class="nav-row">
+        <button class="btn btn-outline" onclick="prevSentenceItem()">⬅️ 上一句</button>
+        <button class="btn btn-outline" onclick="nextSentenceItem()">下一句 ➡️</button>
+      </div>
+      <button class="btn btn-success" onclick="startSentenceSpeechRecognition()">🎙️ 按下開始跟讀</button>
+      <div id="sentence-feedback" class="feedback-box"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 音效合成器 (Web Audio API) ================= */
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContext();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+// 答對音效：輕快上揚三連音
+function playSoundCorrect() {
+  try {
+    const ctx = getAudioContext();
+    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.09);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime + idx * 0.09);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.09 + 0.22);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.09);
+      osc.stop(ctx.currentTime + idx * 0.09 + 0.22);
+    });
+  } catch (e) {}
+}
+
+// 答錯提示音：低音嘟嘟
+function playSoundIncorrect() {
+  try {
+    const ctx = getAudioContext();
+    [220, 185].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.15);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.12);
+      osc.stop(ctx.currentTime + idx * 0.12 + 0.15);
+    });
+  } catch (e) {}
+}
+
+// 通關勝利音樂：大和弦琶音
+function playSoundVictory() {
+  try {
+    const ctx = getAudioContext();
+    const fanfare = [
+      { f: 523.25, d: 0.1 },  // C5
+      { f: 659.25, d: 0.1 },  // E5
+      { f: 783.99, d: 0.1 },  // G5
+      { f: 1046.50, d: 0.35 } // C6
+    ];
+    let start = ctx.currentTime;
+    fanfare.forEach((n) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(n.f, start);
+      gain.gain.setValueAtTime(0.25, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + n.d);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + n.d);
+      start += n.d * 0.85;
+    });
+  } catch (e) {}
+}
+
+/* ================= 碎紙花動畫系統 (Confetti Animation) ================= */
+const confettiCanvas = document.getElementById('confetti-canvas');
+const ctx = confettiCanvas.getContext('2d');
+let particles = [];
+let animationId = null;
+
+function resizeCanvas() {
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function triggerConfetti(count = 45, isVictory = false) {
+  const colors = ['#f43f5e', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#06b6d4'];
+  const centerX = window.innerWidth / 2;
+  const centerY = isVictory ? window.innerHeight * 0.3 : window.innerHeight * 0.45;
+
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = isVictory ? (Math.random() * 12 + 6) : (Math.random() * 8 + 4);
+    particles.push({
+      x: centerX,
+      y: centerY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - (isVictory ? 4 : 2),
+      size: Math.random() * 8 + 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      vRotation: (Math.random() - 0.5) * 10,
+      alpha: 1,
+      gravity: 0.28
+    });
+  }
+  if (!animationId) {
+    renderConfetti();
+  }
+}
+
+function renderConfetti() {
+  ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  particles.forEach((p, idx) => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += p.gravity;
+    p.rotation += p.vRotation;
+    p.alpha -= 0.015;
+
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.alpha);
+    ctx.translate(p.x, p.y);
+    ctx.rotate((p.rotation * Math.PI) / 180);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+    ctx.restore();
+
+    if (p.alpha <= 0 || p.y > window.innerHeight) {
+      particles.splice(idx, 1);
+    }
+  });
+
+  if (particles.length > 0) {
+    animationId = requestAnimationFrame(renderConfetti);
+  } else {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+/* ================= 僑光國小學習護照資料庫 ================= */
+const passportData = {
+  vocabularies: {
+    "Grade 1-1 (Aa - Mm)": [
+      { letter: "Aa", word: "apple", meaning: "蘋果" },
+      { letter: "Bb", word: "book", meaning: "書本" },
+      { letter: "Cc", word: "cat", meaning: "貓" },
+      { letter: "Dd", word: "dog", meaning: "狗" },
+      { letter: "Ee", word: "egg", meaning: "蛋" },
+      { letter: "Ff", word: "fish", meaning: "魚" },
+      { letter: "Gg", word: "goat", meaning: "山羊" },
+      { letter: "Hh", word: "hen", meaning: "母雞" },
+      { letter: "Ii", word: "insect", meaning: "昆蟲" },
+      { letter: "Jj", word: "jet", meaning: "噴射機" },
+      { letter: "Kk", word: "kite", meaning: "風箏" },
+      { letter: "Ll", word: "lion", meaning: "獅子" },
+      { letter: "Mm", word: "monkey", meaning: "猴子" }
+    ],
+    "Grade 1-1 (Nn - Zz)": [
+      { letter: "Nn", word: "net", meaning: "網子" },
+      { letter: "Oo", word: "ox", meaning: "公牛" },
+      { letter: "Pp", word: "pig", meaning: "豬" },
+      { letter: "Qq", word: "quilt", meaning: "棉被" },
+      { letter: "Rr", word: "red", meaning: "紅色" },
+      { letter: "Ss", word: "sun", meaning: "太陽" },
+      { letter: "Tt", word: "toy", meaning: "玩具" },
+      { letter: "Uu", word: "umbrella", meaning: "雨傘" },
+      { letter: "Vv", word: "vest", meaning: "背心" },
+      { letter: "Ww", word: "watch", meaning: "手錶" },
+      { letter: "Xx", word: "box", meaning: "箱子" },
+      { letter: "Yy", word: "yo-yo", meaning: "溜溜球" },
+      { letter: "Zz", word: "zoo", meaning: "動物園" }
+    ],
+    "全冊字母單字 (Aa - Zz)": []
+  },
+  sentences: {
+    "第一學期 每週一句 (17句)": [
+      { sentence: "Tuck in your shirt.", meaning: "將衣服紮進去。" },
+      { sentence: "Happy Moon Festival.", meaning: "中秋節快樂。" },
+      { sentence: "Please keep your voice down.", meaning: "請降低音量。" },
+      { sentence: "A: Any volunteers? B: Not me. C: I will.", meaning: "A:有人自願嗎？ B:不是我。 C:我自願。" },
+      { sentence: "Excuse me. Is there a 7-11 nearby?", meaning: "請問一下，這附近有 7-11 嗎？" },
+      { sentence: "I’ve got a tan.", meaning: "我曬黑了。" },
+      { sentence: "Please keep my secret.", meaning: "請為我保密吧!" },
+      { sentence: "This is my favorite song.", meaning: "這是我最喜歡的一首歌。" },
+      { sentence: "Remember to recycle paper and bottles.", meaning: "記得回收紙類與瓶罐。" },
+      { sentence: "Today is my day.", meaning: "我今天運氣真好。" },
+      { sentence: "Sorry to interrupt.", meaning: "很抱歉打岔。" },
+      { sentence: "Don’t make fun of others.", meaning: "不要取笑別人。" },
+      { sentence: "Saving is getting.", meaning: "節省是致富之道。" },
+      { sentence: "Let’s count down together!", meaning: "讓我們一起倒數吧!" },
+      { sentence: "Walk straight.", meaning: "往前直走。" },
+      { sentence: "Can I use a credit card?", meaning: "可以刷卡嗎？" },
+      { sentence: "Let’s take a trip!", meaning: "我們去旅行吧!" }
+    ],
+    "第二學期 每週一句 (17句)": [
+      { sentence: "Wash your hands.", meaning: "要洗手。" },
+      { sentence: "It's up to you.", meaning: "由你決定。" },
+      { sentence: "I'm on my way.", meaning: "我在路上了。" },
+      { sentence: "How much?", meaning: "多少錢？" },
+      { sentence: "I win.", meaning: "我贏了。" },
+      { sentence: "Have fun.", meaning: "玩得開心。" },
+      { sentence: "That's enough.", meaning: "真是夠了。" },
+      { sentence: "Let's run.", meaning: "我們一起跑。" },
+      { sentence: "Please recycle.", meaning: "請回收。" },
+      { sentence: "Protect the earth.", meaning: "愛護地球。" },
+      { sentence: "I mean it.", meaning: "我是認真的。" },
+      { sentence: "Happy Mothers' Day.", meaning: "母親節快樂。" },
+      { sentence: "Way to go.", meaning: "做得好。" },
+      { sentence: "It's getting hot.", meaning: "天氣漸漸熱了。" },
+      { sentence: "Calm down.", meaning: "冷靜下來。" },
+      { sentence: "Sooner or later.", meaning: "早晚的事。" },
+      { sentence: "Happy Dragon Boat Festival.", meaning: "端午節快樂。" }
+    ],
+    "課室英語 Classroom English (8句)": [
+      { sentence: "Stand up.", meaning: "起立。" },
+      { sentence: "Sit down.", meaning: "坐下。" },
+      { sentence: "Raise your hand.", meaning: "舉手。" },
+      { sentence: "Put down your hand.", meaning: "把手放下。" },
+      { sentence: "Be quiet, please.", meaning: "請安靜。" },
+      { sentence: "Come in, please.", meaning: "請進來。" },
+      { sentence: "Follow me.", meaning: "跟我來。" },
+      { sentence: "Time to go home.", meaning: "回家時間到了。" }
+    ]
+  }
+};
+
+passportData.vocabularies["全冊字母單字 (Aa - Zz)"] = [
+  ...passportData.vocabularies["Grade 1-1 (Aa - Mm)"],
+  ...passportData.vocabularies["Grade 1-1 (Nn - Zz)"]
+];
+
+let currentMode = "flashcard";
+let currentUnitKey = "";
+let activeList = [];
+let currentIndex = 0;
+
+let currentQuizList = [];
+let quizIndex = 0;
+let score = 0;
+let activeRecognition = null;
+let activeUtterance = null;
+
+function normalizeText(t){
+  return String(t||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5);}
+function escapeHtml(str){return String(str||'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));}
+
+function speakText(text){
+  if('speechSynthesis' in window && text){
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      activeUtterance = new SpeechSynthesisUtterance(text);
+      activeUtterance.lang = 'en-US';
+      activeUtterance.rate = 0.8;
+      window.speechSynthesis.speak(activeUtterance);
+    }, 50);
+  }
+}
+
+function pauseActivities(){
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  if(activeRecognition){
+    try{ activeRecognition.abort(); }catch(e){}
+    activeRecognition = null;
+  }
+}
+
+function getUnitsForMode(mode){
+  if(mode === 'sentencePractice') return passportData.sentences;
+  return passportData.vocabularies;
+}
+
+function populateUnitSelector(){
+  const select = document.getElementById('unitSelect');
+  const units = getUnitsForMode(currentMode);
+  select.innerHTML = '';
+  Object.keys(units).forEach(k => {
+    const op = document.createElement('option');
+    op.value = k;
+    op.textContent = k;
+    select.appendChild(op);
+  });
+  currentUnitKey = Object.keys(units)[0] || '';
+  if(currentUnitKey) select.value = currentUnitKey;
+  activeList = units[currentUnitKey] || [];
+  currentIndex = 0;
+}
+
+function switchMode(mode){
+  pauseActivities();
+  currentMode = mode;
+  document.getElementById('modeSelect').value = mode;
+  document.querySelectorAll('.mode-section').forEach(sec => sec.classList.remove('active'));
+  document.getElementById(mode + '-mode')?.classList.add('active');
+  populateUnitSelector();
+  runCurrentMode();
+}
+
+function onUnitChange(){
+  pauseActivities();
+  const units = getUnitsForMode(currentMode);
+  currentUnitKey = document.getElementById('unitSelect').value;
+  activeList = units[currentUnitKey] || [];
+  currentIndex = 0;
+  runCurrentMode();
+}
+
+function runCurrentMode(){
+  if(currentMode === 'flashcard') updateFlashcard();
+  if(currentMode === 'phonicsQuiz') restartPhonicsQuiz();
+  if(currentMode === 'sentencePractice') updateSentencePractice();
+}
+
+/* ================= 1. 閃示卡 ================= */
+function updateFlashcard(){
+  if(!activeList.length) return;
+  if(currentIndex >= activeList.length) currentIndex = 0;
+  const item = activeList[currentIndex];
+  document.getElementById('fc-progress').innerText = `${currentIndex + 1} / ${activeList.length}`;
+  document.getElementById('fc-letter').innerText = item.letter || item.word.charAt(0).toUpperCase();
+  document.getElementById('fc-word').innerText = item.word;
+  document.getElementById('fc-meaning').innerText = item.meaning;
+}
+function playCurrentWordAudio(){
+  if(activeList[currentIndex]) speakText(activeList[currentIndex].word);
+}
+function nextWord(){
+  if(!activeList.length) return;
+  currentIndex = (currentIndex + 1) % activeList.length;
+  updateFlashcard();
+}
+function prevWord(){
+  if(!activeList.length) return;
+  currentIndex = (currentIndex - 1 + activeList.length) % activeList.length;
+  updateFlashcard();
+}
+
+/* ================= 2. 辨音測驗 ================= */
+function restartPhonicsQuiz(){
+  currentQuizList = shuffle(activeList);
+  quizIndex = 0;
+  score = 0;
+  document.getElementById('phonics-quiz-view').style.display = 'block';
+  document.getElementById('phonics-result-view').style.display = 'none';
+  loadPhonicsQuestion();
+}
+
+function loadPhonicsQuestion(){
+  if(quizIndex >= currentQuizList.length){
+    showPhonicsResult();
+    return;
+  }
+  const cur = currentQuizList[quizIndex];
+  document.getElementById('phonics-progress').innerText = `題目 ${quizIndex + 1} / ${currentQuizList.length}`;
+  const fb = document.getElementById('phonics-feedback');
+  fb.className = 'feedback-box';
+  fb.innerHTML = '';
+
+  const allWords = passportData.vocabularies["全冊字母單字 (Aa - Zz)"].map(x => x.word);
+  const choices = [cur.word];
+  while(choices.length < Math.min(4, allWords.length)){
+    const r = allWords[Math.floor(Math.random() * allWords.length)];
+    if(!choices.includes(r)) choices.push(r);
+  }
+
+  const box = document.getElementById('phonics-quiz-options');
+  box.innerHTML = '';
+  shuffle(choices).forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'option-text-btn';
+    btn.innerText = choice;
+    btn.onclick = () => checkPhonicsAnswer(choice, cur);
+    box.appendChild(btn);
+  });
+
+  speakText(cur.word);
+}
+
+function playPhonicsQuizAudio(){
+  if(currentQuizList[quizIndex]) speakText(currentQuizList[quizIndex].word);
+}
+
+function triggerCardBounce(cardId) {
+  const card = document.getElementById(cardId);
+  if(card){
+    card.classList.remove('bounce');
+    void card.offsetWidth; // 強制重繪
+    card.classList.add('bounce');
+  }
+}
+
+function checkPhonicsAnswer(selected, correctItem){
+  document.querySelectorAll('#phonics-quiz-options button').forEach(b => b.disabled = true);
+  const fb = document.getElementById('phonics-feedback');
+  
+  if(selected === correctItem.word){
+    score++;
+    playSoundCorrect();
+    triggerConfetti(40, false);
+    triggerCardBounce('phonics-card');
+
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = '🎉 答對了！太厲害了！';
+    setTimeout(()=>{ quizIndex++; loadPhonicsQuestion(); }, 1000);
+  }else{
+    playSoundIncorrect();
+    fb.className = 'feedback-box incorrect';
+    fb.innerHTML = `正確答案是：<strong>${escapeHtml(correctItem.word)}</strong> (${correctItem.meaning})`;
+    setTimeout(()=>{ quizIndex++; loadPhonicsQuestion(); }, 1800);
+  }
+}
+
+function showPhonicsResult(){
+  document.getElementById('phonics-quiz-view').style.display = 'none';
+  const resView = document.getElementById('phonics-result-view');
+  resView.style.display = 'flex';
+
+  playSoundVictory();
+  triggerConfetti(120, true);
+
+  resView.innerHTML = `
+    <div class="card-box bounce">
+      <div style="font-size:3.5rem;animation:popSuccess 0.6s ease infinite alternate;">🏆</div>
+      <h2 style="margin:12px 0 6px 0;font-size:1.6rem;color:#1e293b;">恭喜完成測驗！</h2>
+      <p style="font-size:1.35rem;font-weight:900;color:#4f46e5;margin:8px 0;">總得分：${score} / ${currentQuizList.length}</p>
+      <button class="btn btn-primary" onclick="restartPhonicsQuiz()" style="margin-top:16px;">🔄 再玩一次</button>
+    </div>
+  `;
+}
+
+/* ================= 3. 句子跟讀 ================= */
+function updateSentencePractice(){
+  if(!activeList.length) return;
+  if(currentIndex >= activeList.length) currentIndex = 0;
+  const item = activeList[currentIndex];
+  document.getElementById('sentence-progress').innerText = `句子 ${currentIndex + 1} / ${activeList.length}`;
+  document.getElementById('sentence-text').innerText = item.sentence;
+  document.getElementById('sentence-meaning').innerText = item.meaning;
+  const fb = document.getElementById('sentence-feedback');
+  fb.className = 'feedback-box';
+  fb.innerHTML = '';
+}
+function playCurrentSentenceAudio(){
+  if(activeList[currentIndex]) speakText(activeList[currentIndex].sentence);
+}
+function nextSentenceItem(){
+  if(!activeList.length) return;
+  currentIndex = (currentIndex + 1) % activeList.length;
+  updateSentencePractice();
+}
+function prevSentenceItem(){
+  if(!activeList.length) return;
+  currentIndex = (currentIndex - 1 + activeList.length) % activeList.length;
+  updateSentencePractice();
+}
+
+function isSpeakingMatch(ans, cor){
+  const a = normalizeText(ans), c = normalizeText(cor);
+  if(!a || !c) return false;
+  if(a === c) return true;
+  const aw = a.split(' ').filter(Boolean), cw = c.split(' ').filter(Boolean);
+  if(cw.length <= 1) return aw.includes(c);
+  return cw.filter(w => aw.includes(w)).length / cw.length >= 0.45;
+}
+
+function startSentenceSpeechRecognition(){
+  const item = activeList[currentIndex];
+  if(!item) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const fb = document.getElementById('sentence-feedback');
+  if(!SR){
+    fb.className = 'feedback-box incorrect';
+    fb.innerHTML = '此瀏覽器不支援語音辨識，建議使用 Google Chrome。';
+    return;
+  }
+  if(activeRecognition){ 
+    try{ activeRecognition.abort(); }catch(e){}
+    activeRecognition = null;
+  }
+  const rec = new SR();
+  activeRecognition = rec;
+  rec.lang = 'en-US';
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  fb.className = 'feedback-box';
+  fb.innerHTML = '🎙️ 正在聆聽，請大聲念出句子...';
+
+  rec.onresult = e => {
+    const transcript = e.results?.[0]?.[0]?.transcript || '';
+    const passed = isSpeakingMatch(transcript, item.sentence);
+    
+    if(passed) {
+      playSoundCorrect();
+      triggerConfetti(45, false);
+      triggerCardBounce('sentence-card');
+      fb.className = 'feedback-box correct';
+      fb.innerHTML = `🎉 唸得真好！辨識到：<strong>${escapeHtml(transcript)}</strong>`;
+    } else {
+      playSoundIncorrect();
+      fb.className = 'feedback-box incorrect';
+      fb.innerHTML = `再試一次！<br>正確句子：<strong>${escapeHtml(item.sentence)}</strong><br>辨識結果：${escapeHtml(transcript || '未收到清楚聲音')}`;
+    }
+  };
+  rec.onerror = () => {
+    fb.className = 'feedback-box incorrect';
+    fb.innerHTML = '沒有成功接收到聲音，請確認麥克風權限後重試。';
+  };
+  rec.onend = () => {
+    activeRecognition = null;
+  };
+  
+  try {
+    rec.start();
+  } catch(err) {
+    activeRecognition = null;
+    fb.className = 'feedback-box incorrect';
+    fb.innerHTML = '啟動麥克風失敗，請重新點擊。';
+  }
+}
+
+window.onload = () => {
+  populateUnitSelector();
+  runCurrentMode();
+};
+</script>
+</body>
+</html>
